@@ -14,6 +14,7 @@ output:
 library(tidyverse)
 library(patchwork)
 library(janitor)
+library(readr)
 ```
 
 
@@ -23,7 +24,13 @@ Comments in HTML are like this!
 
 
 ```{r, include=FALSE}
-#billboard_data <- "BillboardFromLast20/"
+artistDf <- read_csv("BillboardFromLast20/artistDf.csv") %>% clean_names()
+billboardHot100 <- read_csv("BillboardFromLast20/billboardHot100_1999-2019.csv") %>% clean_names()
+songAttributes <- read_csv("BillboardFromLast20/songAttributes_1999-2019.csv") %>% clean_names()
+spotify_weekly_streams <- read_csv("BillboardFromLast20/spotifyWeeklyTop200Streams.csv") %>% clean_names()
+
+
+
 ```
 
 
