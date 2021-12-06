@@ -1,0 +1,43 @@
+---
+title: "My Final Project"
+author: "Rachel Aliwalas and Lillian Fok"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(patchwork)
+library(janitor)
+```
+
+
+<!--
+Comments in HTML are like this! 
+-->
+
+
+```{r, include=FALSE}
+#billboard_data <- "BillboardFromLast20/"
+```
+
+
+# SECTION NAME
+
+## Subsection name
+
+Write an intro `index.html` page in blog-post style that summarizes your work. It should have
+
+1. One visualization that best summarizes your work.
+1. No more than 200 words of text
+
+```{r, echo = FALSE}
+
+```
+
+
