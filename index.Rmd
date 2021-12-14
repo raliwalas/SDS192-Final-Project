@@ -15,6 +15,7 @@ library(tidyverse)
 library(patchwork)
 library(janitor)
 library(readr)
+library(lubridate)
 ```
 
 
@@ -28,8 +29,29 @@ artistDf <- read_csv("BillboardFromLast20/artistDf.csv") %>% clean_names()
 billboardHot100 <- read_csv("BillboardFromLast20/billboardHot100_1999-2019.csv") %>% clean_names()
 songAttributes <- read_csv("BillboardFromLast20/songAttributes_1999-2019.csv") %>% clean_names()
 spotify_weekly_streams <- read_csv("BillboardFromLast20/spotifyWeeklyTop200Streams.csv") %>% clean_names()
+```
+
+```{r, include=FALSE}
+clean_spotify <- spotify_weekly_streams %>% 
+  separate(week, into = c("year","month","day"), sep = "-") %>% 
+  select(-day, -x1, -features) %>% 
+  group_by(name)
+
+bill100 <- billboardHot100 %>% 
+  separate(week, into = c("year","month","day"), sep = "-") %>% 
+  select(-day, -x1, -writing_credits, -lyrics, -date, -features, -artists) %>% 
+  filter(year == "2016" | year == "2017" | year == "2018" | year == "2019") %>% 
+  group_by(name)
+```
 
 
+```{r, include=FALSE}
+clean_data <- bill100 %>%
+  left_join(clean_spotify, by = c("year", "month", "name")) %>% 
+  filter(!is.na(streams)) %>% 
+  #select(name, artist, year, month, weekly_rank, weeks_on_chart, streams) %>% 
+  #group_by(name, year, month, weeks_on_chart) %>% 
+  summarise(sum(streams))
 
 ```
 
