@@ -60,11 +60,14 @@ bill100 <- billboardHot100 %>%
 
 ```{r, include=FALSE}
 test <- bill100 %>%
-  left_join(clean_spotify, by = c("year", "month", "name")) %>% 
-  filter(!is.na(streams))
+  full_join(clean_spotify, by = c("year", "month", "name")) %>% 
+  filter(!is.na(streams), !is.na(peak_position)) %>% 
+  select(-day.x, -day.y, -genre) %>% 
+  group_by(name) %>% 
+  mutate(total = sum(streams)) %>% 
+  mutate(per_hundred_thousand = total/100000)
 
 ```
-
 
 
 ```{r, include=FALSE}
@@ -78,6 +81,30 @@ total_streams <- bill100 %>%
   arrange(desc(per_hundred_thousand)) %>% 
   slice(1:20)
 ```
+
+
+```{r}
+total_streams10 <- total_streams %>%   arrange(desc(per_hundred_thousand)) %>% 
+  slice(1:10)
+
+try <- total_streams10 %>% left_join(bill100, by = "name") %>% 
+  select(-genre) %>% 
+  filter(!is.na(peak_position)) %>% 
+  group_by(name, per_hundred_thousand) %>% 
+  summarise(m_pos = min(peak_position))
+
+
+```
+
+
+```{r}
+ggplot(try, aes(y = per_hundred_thousand, x = m_pos, color = name)) + 
+  geom_point(size = 2.5) + 
+  scale_x_reverse() +
+  geom_text(aes(label = ifelse(name == "God's Plan" | name == "Unforgettable", as.character(name),''), hjust=1, vjust=1)) +
+  labs(title = "Billboard's Top 100 Peak Postitioning and Total Streams (2016-2019)", x = "Peak Billboard 100 Position", y = "Spotify Streams (Per 100,000 Thousand)")
+```
+
 
 
 ```{r}
